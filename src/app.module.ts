@@ -5,6 +5,7 @@ import * as Joi from 'joi';
 import { HttpExceptionFilter } from './common/filter/http-exception.filter';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor';
 import { ProfileModule } from './modules/profile/profile.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -16,7 +17,8 @@ import { ProfileModule } from './modules/profile/profile.module';
         CORS_ORIGINS: Joi.string().required(),
       }),
     }),
-    ProfileModule,
+    AuthModule,
+    ProfileModule
   ],
 
   controllers: [],

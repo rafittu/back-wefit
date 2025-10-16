@@ -5,6 +5,7 @@ import { AuthService } from './services/auth.service';
 import { LocalStrategy } from './strategies/local.strategy';
 import { JwtModule } from '@nestjs/jwt';
 import type { SignOptions } from 'jsonwebtoken';
+import { JwtStrategy } from './strategies/jwt.strategy';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import type { SignOptions } from 'jsonwebtoken';
   providers: [
     PrismaService,
     LocalStrategy,
+    JwtStrategy,
     AuthService,
   ],
 })

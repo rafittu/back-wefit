@@ -9,12 +9,14 @@ import { HttpExceptionFilter } from '../../common/filter/http-exception.filter';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { AuthService } from './services/auth.service';
 import { IAuthRequest, IUserToken } from './interfaces/auth.interface';
+import { isPublic } from 'src/common/decorators/is-public.decorator';
 
 @UseFilters(new HttpExceptionFilter())
 @Controller()
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @isPublic()
   @Post('/login')
   @UseGuards(LocalAuthGuard)
   async login(@Request() req: IAuthRequest): Promise<IUserToken> {

@@ -7,9 +7,13 @@ import {
   Matches,
   Length,
 } from 'class-validator';
+import { IsMatch } from 'src/common/decorators/is-match.decorator';
 
 const stripNonNumeric = ({ value }: { value: string | undefined }) =>
   value ? value.replace(/\D/g, '') : value;
+
+const transformEmail = ({ value }: { value: string | undefined }) =>
+  typeof value === 'string' ? value.trim().toLowerCase() : value;
 
 export class CreateProfileDto {
   @IsOptional()
@@ -41,11 +45,14 @@ export class CreateProfileDto {
   phone?: string;
 
   @IsNotEmpty({ message: 'Email is required' })
+  @Transform(transformEmail)
   @IsEmail({}, { message: 'Email must be valid' })
   email: string;
 
   @IsNotEmpty({ message: 'Email confirmation is required' })
+  @Transform(transformEmail)
   @IsEmail({}, { message: 'Email confirmation must be valid' })
+  @IsMatch('email', { message: 'Email Confirmation must match Email field' })
   emailConfirmation: string;
 
   @IsNotEmpty({ message: 'CEP is required' })

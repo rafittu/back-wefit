@@ -4,6 +4,7 @@ import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import * as Joi from 'joi';
 import { HttpExceptionFilter } from './common/filter/http-exception.filter';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor';
+import { ProfileModule } from './modules/profile/profile.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { ResponseInterceptor } from './common/interceptors/response.interceptor'
         CORS_ORIGINS: Joi.string().required(),
       }),
     }),
+    ProfileModule,
   ],
 
   controllers: [],

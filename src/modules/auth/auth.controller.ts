@@ -8,7 +8,7 @@ import {
 import { HttpExceptionFilter } from '../../common/filter/http-exception.filter';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { AuthService } from './services/auth.service';
-import { IAuthRequest } from './interfaces/auth.interface';
+import { IAuthRequest, IUserToken } from './interfaces/auth.interface';
 
 @UseFilters(new HttpExceptionFilter())
 @Controller()
@@ -17,7 +17,7 @@ export class AuthController {
 
   @Post('/login')
   @UseGuards(LocalAuthGuard)
-  async login(@Request() req: IAuthRequest) {
+  async login(@Request() req: IAuthRequest): Promise<IUserToken> {
     const { user } = req;
 
     return await this.authService.execute(user);

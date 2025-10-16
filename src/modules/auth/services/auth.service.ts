@@ -1,15 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { CredentialsDto } from '../dto/credentials.dto';
 import { AppError } from '../../../common/errors/Error';
-import { IUserPayload } from '../interfaces/auth.interface';
+import { IJtwPayload, IUserPayload, IUserToken } from '../interfaces/auth.interface';
 import * as bcrypt from 'bcrypt';
 import { findUserByEmail } from '../mocks/auth.mock';
 import { PrismaService } from 'src/prisma.service';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
     constructor(
         private prisma: PrismaService,
+        private jwtService: JwtService,
     ) {}
 
     private async comparePasswords(
@@ -19,7 +21,7 @@ export class AuthService {
         return bcrypt.compare(password, hashedPassword);
     }
 
-    async validateUser(credentials: CredentialsDto) {
+    async validateUser(credentials: CredentialsDto): Promise<IUserPayload> {
         const { email, password } = credentials;
 
         try {
@@ -41,7 +43,7 @@ export class AuthService {
             }
 
             throw new AppError(
-                'login-service.validateUser',
+                'auth-service.validateUser',
                 401,
                 'email or password is invalid',
             );
@@ -50,11 +52,25 @@ export class AuthService {
         }
     }
 
-    async execute(user: IUserPayload) {
-        throw new AppError(
-            'login-service.validateUser',
-            401,
-            'method not implemented',
-        );
+    async execute(user: IUserPayload): Promise<IUserToken> {
+        try {
+            const payload: IJtwPayload = {
+                sub: user.id,
+                name: user.name,
+                email: user.email,
+            };
+
+            const accessToken = this.jwtService.sign(payload);
+
+            return {
+                accessToken,
+            };
+        } catch (error) {
+            throw new AppError(
+                'auth-service.execute',
+                500,
+                `${error}`
+            );
+        }
     }
 }

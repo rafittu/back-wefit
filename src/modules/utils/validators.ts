@@ -26,3 +26,31 @@ export const isValidCPF = (cpf: string): boolean => {
 
   return remainder === parseInt(cpf.substring(10, 11));
 };
+
+// === CNPJ Validation ===
+export const isValidCNPJ = (cnpj: string): boolean => {
+  if (!cnpj || cnpj.length !== 14) return false;
+
+  // Reject CNPJs with all identical digits
+  if (/^(\d)\1+$/.test(cnpj)) return false;
+
+  const calcCheckDigit = (base: string, multipliers: number[]): number => {
+    const sum = base
+      .split('')
+      .reduce((acc, num, idx) => acc + parseInt(num) * multipliers[idx], 0);
+    const remainder = sum % 11;
+    return remainder < 2 ? 0 : 11 - remainder;
+  };
+
+  const firstMultipliers = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+  const secondMultipliers = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+
+  const base = cnpj.substring(0, 12);
+  const firstCheckDigit = calcCheckDigit(base, firstMultipliers);
+  const secondCheckDigit = calcCheckDigit(base + firstCheckDigit, secondMultipliers);
+
+  return (
+    firstCheckDigit === parseInt(cnpj[12]) &&
+    secondCheckDigit === parseInt(cnpj[13])
+  );
+};

@@ -5,6 +5,9 @@
 # environments
 .env
 
+# local data
+data/
+
 # Logs
 logs
 *.log

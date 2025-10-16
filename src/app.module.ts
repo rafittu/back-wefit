@@ -15,6 +15,8 @@ import { AuthModule } from './modules/auth/auth.module';
         PORT: Joi.number().default(3000),
         DATABASE_URL: Joi.string().required(),
         CORS_ORIGINS: Joi.string().required(),
+        JWT_SECRET: Joi.string().required(),
+        JWT_EXPIRATION_TIME: Joi.string().required(),
       }),
     }),
     AuthModule,

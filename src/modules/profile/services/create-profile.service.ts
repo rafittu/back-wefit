@@ -5,6 +5,7 @@ import { ProfileRepository } from '../repository/profile.repository';
 import { IProfileRepository } from '../interfaces/repository.interface';
 import { Profile } from '@prisma/client';
 import { CreateProfileDto } from '../dto/create-profile.dto';
+import { isValidCNPJ, isValidCPF } from 'src/modules/utils/validators';
 
 @Injectable()
 export class CreateProfileService {
@@ -37,6 +38,22 @@ export class CreateProfileService {
     data: CreateProfileDto,
   ) {
     try {
+      if (!data.cnpj && !data.cpf) {
+        throw new AppError(
+          'profile-service.createProfile',
+          400,
+          'missing user CPF or CNPJ',
+        );
+      }
+
+      if (data.cpf && !isValidCPF(data.cpf)) {
+        throw new AppError('profile-service.createProfile', 400, 'provided CPF is invalid.');
+      }
+
+      if (data.cnpj && !isValidCNPJ(data.cnpj)) {
+        throw new AppError('profile-service.createProfile', 400, 'provided CNPJ is invalid.');
+      }
+
       const { logradouro, bairro, localidade, uf } =
         await this.getAddress(data.zipCode);
 

@@ -7,7 +7,7 @@ import {
   Matches,
   Length,
 } from 'class-validator';
-import { IsMatch } from 'src/common/decorators/is-match.decorator';
+import { IsMatch } from '../../../common/decorators/is-match.decorator';
 
 const stripNonNumeric = ({ value }: { value: string | undefined }) =>
   value ? value.replace(/\D/g, '') : value;

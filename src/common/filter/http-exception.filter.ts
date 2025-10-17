@@ -1,4 +1,4 @@
-import { AppError } from '../../common/errors/Error';
+import { AppError } from '../errors/Error';
 import {
   ExceptionFilter,
   Catch,

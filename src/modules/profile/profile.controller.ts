@@ -1,6 +1,6 @@
 import { Controller, Post, Body, UseFilters, Inject } from '@nestjs/common';
 import { CreateProfileDto } from './dto/create-profile.dto';
-import { HttpExceptionFilter } from 'src/common/filter/http-exception.filter';
+import { HttpExceptionFilter } from '../../common/filter/http-exception.filter';
 import { CreateProfileService } from './services/create-profile.service';
 import { IProfileResponse } from './interfaces/profile.interface';
 

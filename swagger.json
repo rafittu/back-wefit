@@ -55,10 +55,41 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/LoginResponse"
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "object",
+                                            "properties": {
+                                                "status": {
+                                                    "type": "boolean",
+                                                    "example": false
+                                                },
+                                                "message": {
+                                                    "type": "string",
+                                                    "nullable": true,
+                                                    "example": null
+                                                },
+                                                "code": {
+                                                    "type": "integer",
+                                                    "nullable": true,
+                                                    "example": null
+                                                }
+                                            }
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/LoginResponse"
+                                        }
+                                    }
                                 },
                                 "example": {
-                                    "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwibmFtZSI6IlVzZXIgT25lIiwiZW1haWwiOiJ1c2VyMUBleGFtcGxlLmNvbSIsImlhdCI6MTYzNDU2Nzg5MCwiZXhwIjoxNjM0NTcxNDkwfQ.xyz"
+                                    "error": {
+                                        "status": false,
+                                        "message": null,
+                                        "code": null
+                                    },
+                                    "data": {
+                                        "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwibmFtZSI6IlVzZXIgT25lIiwiZW1haWwiOiJ1c2VyMUBleGFtcGxlLmNvbSIsImlhdCI6MTYzNDU2Nzg5MCwiZXhwIjoxNjM0NTcxNDkwfQ.xyz"
+                                    }
                                 }
                             }
                         }
@@ -148,12 +179,43 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/UserPayload"
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "object",
+                                            "properties": {
+                                                "status": {
+                                                    "type": "boolean",
+                                                    "example": false
+                                                },
+                                                "message": {
+                                                    "type": "string",
+                                                    "nullable": true,
+                                                    "example": null
+                                                },
+                                                "code": {
+                                                    "type": "integer",
+                                                    "nullable": true,
+                                                    "example": null
+                                                }
+                                            }
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/UserPayload"
+                                        }
+                                    }
                                 },
                                 "example": {
-                                    "id": "1",
-                                    "name": "User One",
-                                    "email": "user1@example.com"
+                                    "error": {
+                                        "status": false,
+                                        "message": null,
+                                        "code": null
+                                    },
+                                    "data": {
+                                        "id": "1",
+                                        "name": "User One",
+                                        "email": "user1@example.com"
+                                    }
                                 }
                             }
                         }
@@ -196,6 +258,311 @@
                     }
                 }
             }
+        },
+
+        "/profile/create": {
+            "post": {
+                "tags": ["Profile"],
+                "summary": "Create a new profile",
+                "description": "Creates a new user profile with address validation via ViaCEP API. Requires either CPF or CNPJ (Brazilian documents). **Authentication required.**",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateProfileRequest"
+                            },
+                            "example": {
+                                "cpf": "52998224725",
+                                "name": "João Silva",
+                                "cellphone": "11999887766",
+                                "phone": "1133334444",
+                                "email": "joao.silva@example.com",
+                                "emailConfirmation": "joao.silva@example.com",
+                                "zipCode": "01001000",
+                                "street": "Praça da Sé",
+                                "number": "100",
+                                "complement": "Lado ímpar",
+                                "city": "São Paulo",
+                                "neighborhood": "Sé",
+                                "state": "SP"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Profile created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "object",
+                                            "properties": {
+                                                "status": {
+                                                    "type": "boolean",
+                                                    "example": false
+                                                },
+                                                "message": {
+                                                    "type": "string",
+                                                    "nullable": true,
+                                                    "example": null
+                                                },
+                                                "code": {
+                                                    "type": "integer",
+                                                    "nullable": true,
+                                                    "example": null
+                                                }
+                                            }
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/ProfileWithAddress"
+                                        }
+                                    }
+                                },
+                                "example": {
+                                    "error": {
+                                        "status": false,
+                                        "message": null,
+                                        "code": null
+                                    },
+                                    "data": {
+                                        "id": "550e8400-e29b-41d4-a716-446655440000",
+                                        "cpf": "52998224725",
+                                        "cnpj": null,
+                                        "name": "João Silva",
+                                        "cellphone": "11999887766",
+                                        "phone": "1133334444",
+                                        "email": "joao.silva@example.com",
+                                        "createdAt": "2025-10-17T14:30:00.000Z",
+                                        "updatedAt": "2025-10-17T14:30:00.000Z",
+                                        "address": {
+                                            "id": "660e8400-e29b-41d4-a716-446655440001",
+                                            "profileId": "550e8400-e29b-41d4-a716-446655440000",
+                                            "zipcode": "01001000",
+                                            "street": "Praça da Sé",
+                                            "number": "100",
+                                            "complement": "Lado ímpar",
+                                            "neighborhood": "Sé",
+                                            "city": "São Paulo",
+                                            "state": "SP",
+                                            "createdAt": "2025-10-17T14:30:00.000Z",
+                                            "updatedAt": "2025-10-17T14:30:00.000Z"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Missing or invalid JWT token",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "missingToken": {
+                                        "summary": "Missing authorization header",
+                                        "value": {
+                                            "internalCode": "jwt.error",
+                                            "code": 401,
+                                            "message": "Unauthorized"
+                                        }
+                                    },
+                                    "invalidToken": {
+                                        "summary": "Invalid or expired token",
+                                        "value": {
+                                            "internalCode": "jwt.error",
+                                            "code": 401,
+                                            "message": "Invalid token"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request - Validation errors",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "missingCPForCNPJ": {
+                                        "summary": "Missing both CPF and CNPJ",
+                                        "value": {
+                                            "internalCode": "profile-service.createProfile",
+                                            "code": 400,
+                                            "message": "missing CPF or CNPJ"
+                                        }
+                                    },
+                                    "invalidCPF": {
+                                        "summary": "Invalid CPF",
+                                        "value": {
+                                            "internalCode": "profile-service.createProfile",
+                                            "code": 400,
+                                            "message": "provided CPF is invalid."
+                                        }
+                                    },
+                                    "invalidCNPJ": {
+                                        "summary": "Invalid CNPJ",
+                                        "value": {
+                                            "internalCode": "profile-service.createProfile",
+                                            "code": 400,
+                                            "message": "provided CNPJ is invalid."
+                                        }
+                                    },
+                                    "missingName": {
+                                        "summary": "Missing name",
+                                        "value": {
+                                            "internalCode": "validation.error",
+                                            "code": 400,
+                                            "message": "Name is required"
+                                        }
+                                    },
+                                    "invalidEmail": {
+                                        "summary": "Invalid email format",
+                                        "value": {
+                                            "internalCode": "validation.error",
+                                            "code": 400,
+                                            "message": "Email must be valid"
+                                        }
+                                    },
+                                    "emailMismatch": {
+                                        "summary": "Email confirmation doesn't match",
+                                        "value": {
+                                            "internalCode": "validation.error",
+                                            "code": 400,
+                                            "message": "Email Confirmation must match Email field"
+                                        }
+                                    },
+                                    "invalidCellphone": {
+                                        "summary": "Invalid cellphone format",
+                                        "value": {
+                                            "internalCode": "validation.error",
+                                            "code": 400,
+                                            "message": "Cellphone must be a valid Brazilian cellphone (11 digits: DD9XXXXXXXX)"
+                                        }
+                                    },
+                                    "invalidZipCode": {
+                                        "summary": "Invalid ZIP code format",
+                                        "value": {
+                                            "internalCode": "validation.error",
+                                            "code": 400,
+                                            "message": "ZipCode (CEP) must be a valid postal code"
+                                        }
+                                    },
+                                    "zipCodeNotFound": {
+                                        "summary": "ZIP code not found in ViaCEP",
+                                        "value": {
+                                            "internalCode": "create-profile.getAddress",
+                                            "code": 400,
+                                            "message": "error fetching address from ViaCEP: zipCode not found in ViaCEP database"
+                                        }
+                                    },
+                                    "addressMismatch": {
+                                        "summary": "City/State don't match ViaCEP",
+                                        "value": {
+                                            "internalCode": "create-profile.addressMismatch",
+                                            "code": 400,
+                                            "message": "Provided city/state do not match the address returned by ViaCEP"
+                                        }
+                                    },
+                                    "invalidState": {
+                                        "summary": "Invalid state format",
+                                        "value": {
+                                            "internalCode": "validation.error",
+                                            "code": 400,
+                                            "message": "State must have 2 characters (e.g., SP, RJ)"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict - Duplicate unique field",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "emailExists": {
+                                        "summary": "Email already exists",
+                                        "value": {
+                                            "internalCode": "profile-repository.createProfile",
+                                            "code": 409,
+                                            "message": "email already taken"
+                                        }
+                                    },
+                                    "cpfExists": {
+                                        "summary": "CPF already exists",
+                                        "value": {
+                                            "internalCode": "profile-repository.createProfile",
+                                            "code": 409,
+                                            "message": "cpf already taken"
+                                        }
+                                    },
+                                    "cnpjExists": {
+                                        "summary": "CNPJ already exists",
+                                        "value": {
+                                            "internalCode": "profile-repository.createProfile",
+                                            "code": 409,
+                                            "message": "cnpj already taken"
+                                        }
+                                    },
+                                    "cellphoneExists": {
+                                        "summary": "Cellphone already exists",
+                                        "value": {
+                                            "internalCode": "profile-repository.createProfile",
+                                            "code": 409,
+                                            "message": "cellphone already taken"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "databaseError": {
+                                        "summary": "Database error",
+                                        "value": {
+                                            "internalCode": "profile-repository.createProfile",
+                                            "code": 500,
+                                            "message": "profile not created: Database connection failed"
+                                        }
+                                    },
+                                    "serviceError": {
+                                        "summary": "Unexpected service error",
+                                        "value": {
+                                            "internalCode": "profile-service.createProfile",
+                                            "code": 500,
+                                            "message": "failed to create profile: Unexpected error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
 
@@ -226,6 +593,217 @@
                         "type": "string",
                         "description": "JWT access token for authentication",
                         "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                    }
+                }
+            },
+            "CreateProfileRequest": {
+                "type": "object",
+                "required": ["name", "cellphone", "email", "emailConfirmation", "zipCode", "street", "number", "city", "neighborhood", "state"],
+                "properties": {
+                    "cpf": {
+                        "type": "string",
+                        "pattern": "^\\d{11}$",
+                        "description": "Brazilian CPF (11 digits). Required if CNPJ is not provided.",
+                        "example": "52998224725"
+                    },
+                    "cnpj": {
+                        "type": "string",
+                        "pattern": "^\\d{14}$",
+                        "description": "Brazilian CNPJ (14 digits). Required if CPF is not provided.",
+                        "example": "11222333000181"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "Full name",
+                        "example": "João Silva"
+                    },
+                    "cellphone": {
+                        "type": "string",
+                        "pattern": "^\\d{2}9\\d{8}$",
+                        "description": "Brazilian cellphone (11 digits: DD9XXXXXXXX)",
+                        "example": "11999887766"
+                    },
+                    "phone": {
+                        "type": "string",
+                        "pattern": "^\\d{2}[2-5]\\d{7}$",
+                        "description": "Brazilian landline (10 digits: DDXXXXXXXX) - Optional",
+                        "example": "1133334444"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "description": "Email address",
+                        "example": "joao.silva@example.com"
+                    },
+                    "emailConfirmation": {
+                        "type": "string",
+                        "format": "email",
+                        "description": "Email confirmation (must match email field)",
+                        "example": "joao.silva@example.com"
+                    },
+                    "zipCode": {
+                        "type": "string",
+                        "pattern": "^\\d{8}$",
+                        "description": "Brazilian ZIP code - CEP (8 digits)",
+                        "example": "01001000"
+                    },
+                    "street": {
+                        "type": "string",
+                        "description": "Street name (logradouro)",
+                        "example": "Praça da Sé"
+                    },
+                    "number": {
+                        "type": "string",
+                        "description": "Address number",
+                        "example": "100"
+                    },
+                    "complement": {
+                        "type": "string",
+                        "description": "Address complement - Optional",
+                        "example": "Lado ímpar"
+                    },
+                    "city": {
+                        "type": "string",
+                        "description": "City name",
+                        "example": "São Paulo"
+                    },
+                    "neighborhood": {
+                        "type": "string",
+                        "description": "Neighborhood (bairro)",
+                        "example": "Sé"
+                    },
+                    "state": {
+                        "type": "string",
+                        "pattern": "^[A-Z]{2}$",
+                        "minLength": 2,
+                        "maxLength": 2,
+                        "description": "Brazilian state (UF - 2 characters)",
+                        "example": "SP"
+                    }
+                }
+            },
+            "ProfileWithAddress": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "Profile unique identifier",
+                        "example": "550e8400-e29b-41d4-a716-446655440000"
+                    },
+                    "cpf": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Brazilian CPF",
+                        "example": "52998224725"
+                    },
+                    "cnpj": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Brazilian CNPJ",
+                        "example": null
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "Full name",
+                        "example": "João Silva"
+                    },
+                    "cellphone": {
+                        "type": "string",
+                        "description": "Cellphone number",
+                        "example": "11999887766"
+                    },
+                    "phone": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Landline phone",
+                        "example": "1133334444"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "description": "Email address",
+                        "example": "joao.silva@example.com"
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Creation timestamp",
+                        "example": "2025-10-17T14:30:00.000Z"
+                    },
+                    "updatedAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Last update timestamp",
+                        "example": "2025-10-17T14:30:00.000Z"
+                    },
+                    "address": {
+                        "$ref": "#/components/schemas/AddressResponse"
+                    }
+                }
+            },
+            "AddressResponse": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "Address unique identifier",
+                        "example": "660e8400-e29b-41d4-a716-446655440001"
+                    },
+                    "profileId": {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "Profile ID reference",
+                        "example": "550e8400-e29b-41d4-a716-446655440000"
+                    },
+                    "zipcode": {
+                        "type": "string",
+                        "description": "ZIP code (CEP)",
+                        "example": "01001000"
+                    },
+                    "street": {
+                        "type": "string",
+                        "description": "Street name",
+                        "example": "Praça da Sé"
+                    },
+                    "number": {
+                        "type": "string",
+                        "description": "Address number",
+                        "example": "100"
+                    },
+                    "complement": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Address complement",
+                        "example": "Lado ímpar"
+                    },
+                    "neighborhood": {
+                        "type": "string",
+                        "description": "Neighborhood",
+                        "example": "Sé"
+                    },
+                    "city": {
+                        "type": "string",
+                        "description": "City name",
+                        "example": "São Paulo"
+                    },
+                    "state": {
+                        "type": "string",
+                        "description": "State (UF)",
+                        "example": "SP"
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Creation timestamp",
+                        "example": "2025-10-17T14:30:00.000Z"
+                    },
+                    "updatedAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Last update timestamp",
+                        "example": "2025-10-17T14:30:00.000Z"
                     }
                 }
             },
@@ -267,6 +845,38 @@
                         "type": "string",
                         "description": "Readable error message",
                         "example": "email or password is invalid"
+                    }
+                }
+            },
+            "SuccessWrapper": {
+                "type": "object",
+                "description": "Standard success response wrapper applied by ResponseInterceptor",
+                "properties": {
+                    "error": {
+                        "type": "object",
+                        "properties": {
+                            "status": {
+                                "type": "boolean",
+                                "example": false,
+                                "description": "Always false for successful responses"
+                            },
+                            "message": {
+                                "type": "string",
+                                "nullable": true,
+                                "example": null,
+                                "description": "Error message (null for successful responses)"
+                            },
+                            "code": {
+                                "type": "integer",
+                                "nullable": true,
+                                "example": null,
+                                "description": "Error code (null for successful responses)"
+                            }
+                        }
+                    },
+                    "data": {
+                        "type": "object",
+                        "description": "Response data"
                     }
                 }
             }

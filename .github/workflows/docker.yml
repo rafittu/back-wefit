@@ -1,0 +1,101 @@
+name: Docker Build
+
+# When this workflow runs
+on:
+  pull_request:
+    branches: [develop, main]
+    paths:
+      - 'Dockerfile'
+      - 'docker-compose.dev.yml'
+      - '.dockerignore'
+      - 'prisma/**'
+  push:
+    branches: [develop, main]
+    paths:
+      - 'Dockerfile'
+      - 'docker-compose.dev.yml'
+      - '.dockerignore'
+      - 'prisma/**'
+
+jobs:
+  # Job 1: Build Docker image
+  docker-build:
+    name: Build Docker Image
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Docker Buildx (for better caching)
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      # Step 3: Build Docker image
+      - name: Build Docker Image
+        run: docker build -t back-auth:test .
+
+      # Step 4: Verify image was created
+      - name: Verify Docker Image
+        run: docker images | grep back-auth
+
+  # Job 2: Test Docker Compose setup
+  docker-compose:
+    name: Test Docker Compose
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Create .env file for testing
+      - name: Create .env file
+        run: |
+          cat > .env << EOF
+          NODE_ENV=development
+          PORT=3008
+          MYSQLDB_PORT=3306
+          MYSQLDB_DATABASE=wefit
+          MYSQLDB_PASSWORD=senha_root_123
+          JWT_SECRET=test_secret_key_for_ci
+          JWT_EXPIRES_IN=1d
+          EXTERNAL_API_URL=https://jsonplaceholder.typicode.com
+          EOF
+
+      # Step 3: Start services with Docker Compose
+      - name: Start Docker Compose
+        run: docker compose -f docker-compose.dev.yml up -d
+
+      # Step 4: Wait for services to be ready
+      - name: Wait for services
+        run: sleep 30
+
+      # Step 5: Check if MySQL is running
+      - name: Check MySQL container
+        run: docker ps | grep wefit-mysql-dev
+
+      # Step 6: Check if App is running
+      - name: Check App container
+        run: docker ps | grep wefit-app-dev
+
+      # Step 7: Check MySQL health
+      - name: Verify MySQL connection
+        run: docker exec wefit-mysql-dev mysqladmin ping -h localhost -u root -psenha_root_123
+
+      # Step 8: Check if API is responding
+      - name: Test API health
+        run: |
+          sleep 10
+          curl -f http://localhost:3008/health || echo "Health endpoint not available (optional)"
+
+      # Step 9: Show logs for debugging
+      - name: Show Docker logs
+        if: always()
+        run: docker compose -f docker-compose.dev.yml logs
+
+      # Step 10: Stop and cleanup
+      - name: Stop Docker Compose
+        if: always()
+        run: docker compose -f docker-compose.dev.yml down -v

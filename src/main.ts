@@ -2,6 +2,8 @@ import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import helmet from 'helmet';
 import { AppModule } from './app.module';
+import * as swaggerUi from 'swagger-ui-express';
+import * as SwaggerDoc from '../swagger.json';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -15,6 +17,8 @@ async function bootstrap() {
   app.use(helmet());
   app.use(helmet.hidePoweredBy());
   app.use(helmet.contentSecurityPolicy());
+
+  app.use('/v1/api-doc', swaggerUi.serve, swaggerUi.setup(SwaggerDoc));
 
   app.useGlobalPipes(
     new ValidationPipe({

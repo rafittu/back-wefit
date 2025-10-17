@@ -1,0 +1,197 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "WeFit Backend API Documentation",
+      "description": "Back-end API instrunctions to create profile",
+      "contact": {
+        "name": "Rafael Rodrigues Ribeiro",
+        "email": "rafittu@outlook.com"
+      },
+      "version": "1.0.0"
+    },
+
+    "paths": {
+        "/login": {
+            "post": {
+                "tags": ["Authentication"],
+                "summary": "User login",
+                "description": "Authenticates a user with email and password and returns a JWT access token. **Note:** Currently using mock data for authentication (not connected to database yet).",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LoginRequest"
+                            },
+                            "examples": {
+                                "user1": {
+                                    "summary": "Test User 1",
+                                    "value": {
+                                        "email": "user1@example.com",
+                                        "password": "Password123!"
+                                    }
+                                },
+                                "user2": {
+                                    "summary": "Test User 2",
+                                    "value": {
+                                        "email": "user2@example.com",
+                                        "password": "Secret456$"
+                                    }
+                                },
+                                "user3": {
+                                    "summary": "Test User 3",
+                                    "value": {
+                                        "email": "user3@example.com",
+                                        "password": "HelloWorld789#"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login successful - Returns JWT access token",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LoginResponse"
+                                },
+                                "example": {
+                                    "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwibmFtZSI6IlVzZXIgT25lIiwiZW1haWwiOiJ1c2VyMUBleGFtcGxlLmNvbSIsImlhdCI6MTYzNDU2Nzg5MCwiZXhwIjoxNjM0NTcxNDkwfQ.xyz"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request - Invalid request body format",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "missingEmail": {
+                                        "summary": "Missing email",
+                                        "value": {
+                                            "internalCode": "validation.error",
+                                            "code": 400,
+                                            "message": "Email is required"
+                                        }
+                                    },
+                                    "invalidEmail": {
+                                        "summary": "Invalid email format",
+                                        "value": {
+                                            "internalCode": "validation.error",
+                                            "code": 400,
+                                            "message": "Email must be valid"
+                                        }
+                                    },
+                                    "missingPassword": {
+                                        "summary": "Missing password",
+                                        "value": {
+                                            "internalCode": "validation.error",
+                                            "code": 400,
+                                            "message": "Password is required"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Invalid credentials",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "example": {
+                                    "internalCode": "auth-service.validateUser",
+                                    "code": 401,
+                                    "message": "email or password is invalid"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error - JWT generation failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "example": {
+                                    "internalCode": "auth-service.execute",
+                                    "code": 500,
+                                    "message": "Error generating JWT token"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+
+    "components": {
+        "schemas": {
+            "LoginRequest": {
+                "type": "object",
+                "required": ["email", "password"],
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "description": "User email address",
+                        "example": "user1@example.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "format": "password",
+                        "description": "User password",
+                        "example": "Password123!"
+                    }
+                }
+            },
+            "LoginResponse": {
+                "type": "object",
+                "properties": {
+                    "accessToken": {
+                        "type": "string",
+                        "description": "JWT access token for authentication",
+                        "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                    }
+                }
+            },
+            "ErrorResponse": {
+                "type": "object",
+                "properties": {
+                    "internalCode": {
+                        "type": "string",
+                        "description": "Internal error code for debugging",
+                        "example": "auth-service.validateUser"
+                    },
+                    "code": {
+                        "type": "integer",
+                        "description": "HTTP status code",
+                        "example": 401
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "Readable error message",
+                        "example": "email or password is invalid"
+                    }
+                }
+            }
+        },
+
+        "securitySchemes": {
+            "BearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        }
+    }
+}

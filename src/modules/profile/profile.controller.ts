@@ -1,14 +1,19 @@
-import { Controller, Post, Body, UseFilters } from '@nestjs/common';
+import { Controller, Post, Body, UseFilters, Inject } from '@nestjs/common';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { HttpExceptionFilter } from 'src/common/filter/http-exception.filter';
+import { CreateProfileService } from './services/create-profile.service';
+import { IProfileResponse } from './interfaces/profile.interface';
 
 @UseFilters(new HttpExceptionFilter())
 @Controller('profile')
 export class ProfileController {
-  constructor() {}
+  constructor(
+    @Inject(CreateProfileService) private readonly createProfile: CreateProfileService,
+  ) {}
 
-  @Post()
-  create(@Body() createProfileDto: CreateProfileDto) {
-    return 'profile created';
+  @Post('/create')
+  async create(@Body() createProfileDto: CreateProfileDto): Promise<{ data: IProfileResponse }> {
+    const profile = await this.createProfile.execute(createProfileDto);
+    return { data: profile };
   }
 }

@@ -55,9 +55,9 @@ export class CreateProfileDto {
   @IsMatch('email', { message: 'Email Confirmation must match Email field' })
   emailConfirmation: string;
 
-  @IsNotEmpty({ message: 'CEP is required' })
+  @IsNotEmpty({ message: 'ZipCode (CEP) is required' })
   @Transform(stripNonNumeric)
-  @Matches(/^\d{8}$/, { message: 'CEP must be a valid postal code' })
+  @Matches(/^\d{8}$/, { message: 'ZipCode (CEP) must be a valid postal code' })
   zipCode: string;
 
   @IsNotEmpty({ message: 'Street (logradouro) is required' })

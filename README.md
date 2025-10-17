@@ -53,6 +53,12 @@ Este projeto utiliza as seguintes tecnologias:
 - Mensagens de erro descritivas e códigos HTTP apropriados;
 - Sistema centralizado de erros com `AppError`;
 
+### Pipeline automatizado de CI/CD com GitHub Actions:
+- **Testes Automatizados:** Todos os testes unitários são executados em cada PR
+- **Validação de Lint:** Code style é verificado automaticamente
+- **Docker Build:** Validação de containerização em cada mudança
+- **Branch Protection:** Merge bloqueado se testes falharem
+
 <br>
 
 ## 📋 Observação sobre Implementação

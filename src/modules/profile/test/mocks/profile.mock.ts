@@ -44,7 +44,10 @@ export const MockCreateProfileDtoWithPhone: CreateProfileDto = {
   complement: faker.location.secondaryAddress(),
 };
 
-export const MockCreateProfileDtoWithoutDocuments: Omit<CreateProfileDto, 'cpf' | 'cnpj'> = {
+export const MockCreateProfileDtoWithoutDocuments: Omit<
+  CreateProfileDto,
+  'cpf' | 'cnpj'
+> = {
   name: 'Test User',
   cellphone: '11999999999',
   email: 'test@test.com',
@@ -214,14 +217,17 @@ export const MockViaCepErrorResponse: ViaCepResponse = {
 // HTTP Service Mocks
 // ============================================
 
-export const MockHttpService = (viaCepData: ViaCepResponse = MockViaCepResponse) =>
-  of({ data: viaCepData });
+export const MockHttpService = (
+  viaCepData: ViaCepResponse = MockViaCepResponse,
+) => of({ data: viaCepData });
 
 // ============================================
 // Factory Functions (for dynamic test data)
 // ============================================
 
-export const createMockProfile = (overrides: Partial<Profile> = {}): Profile => ({
+export const createMockProfile = (
+  overrides: Partial<Profile> = {},
+): Profile => ({
   id: faker.string.uuid(),
   cnpj: null,
   cpf: '52998224725',
@@ -257,7 +263,7 @@ export const createMockProfileWithAddress = (
 ): ProfileWithAddress => {
   const profile = createMockProfile(overrides);
   const address = createMockProfileAddress(profile.id, overrides.address);
-  
+
   return {
     ...profile,
     address,
@@ -265,7 +271,9 @@ export const createMockProfileWithAddress = (
   };
 };
 
-export const createMockViaCepResponse = (overrides: Partial<ViaCepResponse> = {}): ViaCepResponse => ({
+export const createMockViaCepResponse = (
+  overrides: Partial<ViaCepResponse> = {},
+): ViaCepResponse => ({
   logradouro: faker.location.street(),
   bairro: faker.location.county(),
   localidade: faker.location.city(),

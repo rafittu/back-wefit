@@ -21,7 +21,7 @@ import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard';
       }),
     }),
     AuthModule,
-    ProfileModule
+    ProfileModule,
   ],
 
   controllers: [],

@@ -11,17 +11,14 @@ import { JwtStrategy } from './strategies/jwt.strategy';
   imports: [
     JwtModule.register({
       secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: process.env.JWT_EXPIRATION_TIME as SignOptions['expiresIn'] },
+      signOptions: {
+        expiresIn: process.env.JWT_EXPIRATION_TIME as SignOptions['expiresIn'],
+      },
     }),
   ],
 
   controllers: [AuthController],
 
-  providers: [
-    PrismaService,
-    LocalStrategy,
-    JwtStrategy,
-    AuthService,
-  ],
+  providers: [PrismaService, LocalStrategy, JwtStrategy, AuthService],
 })
 export class AuthModule {}

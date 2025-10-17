@@ -1,6 +1,8 @@
 import { IProfileResponse, ProfileWithAddress } from './profile.interface';
 
-export const mapProfileToResponse = (createdProfile: ProfileWithAddress): IProfileResponse => {
+export const mapProfileToResponse = (
+  createdProfile: ProfileWithAddress,
+): IProfileResponse => {
   return {
     id: createdProfile.id,
     cnpj: createdProfile.cnpj ?? null,

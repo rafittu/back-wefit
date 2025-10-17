@@ -24,7 +24,7 @@ describe('CreateProfileService', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    
+
     profileRepository = {
       createProfile: jest.fn(),
     };
@@ -56,7 +56,7 @@ describe('CreateProfileService', () => {
 
     it('should create profile with valid CNPJ', async () => {
       const result = await service.execute(MockCreateProfileDtoWithCNPJ);
-      
+
       expect(result).toMatchObject({
         id: expect.any(String),
         email: expect.any(String),
@@ -68,7 +68,7 @@ describe('CreateProfileService', () => {
 
     it('should create profile with optional fields', async () => {
       const result = await service.execute(MockCreateProfileDtoWithPhone);
-      
+
       expect(result).toMatchObject({
         id: expect.any(String),
         phone: null,
@@ -91,7 +91,9 @@ describe('CreateProfileService', () => {
     });
 
     it('should throw when both CPF and CNPJ are missing', async () => {
-      await expect(service.execute(MockCreateProfileDtoWithoutDocuments as any)).rejects.toMatchObject({
+      await expect(
+        service.execute(MockCreateProfileDtoWithoutDocuments as any),
+      ).rejects.toMatchObject({
         internalCode: 'profile-service.createProfile',
         code: 400,
         message: 'missing CPF or CNPJ',
@@ -99,7 +101,9 @@ describe('CreateProfileService', () => {
     });
 
     it('should throw when CPF is invalid', async () => {
-      await expect(service.execute(MockCreateProfileDtoWithInvalidCPF)).rejects.toMatchObject({
+      await expect(
+        service.execute(MockCreateProfileDtoWithInvalidCPF),
+      ).rejects.toMatchObject({
         internalCode: 'profile-service.createProfile',
         code: 400,
         message: 'provided CPF is invalid.',
@@ -107,7 +111,9 @@ describe('CreateProfileService', () => {
     });
 
     it('should throw when CNPJ is invalid', async () => {
-      await expect(service.execute(MockCreateProfileDtoWithInvalidCNPJ)).rejects.toMatchObject({
+      await expect(
+        service.execute(MockCreateProfileDtoWithInvalidCNPJ),
+      ).rejects.toMatchObject({
         internalCode: 'profile-service.createProfile',
         code: 400,
         message: 'provided CNPJ is invalid.',
@@ -119,34 +125,38 @@ describe('CreateProfileService', () => {
     it('should call ViaCEP with correct URL', async () => {
       httpService.get.mockReturnValue(of({ data: MockViaCepResponse }));
       profileRepository.createProfile.mockResolvedValue(MockProfileWithAddress);
-      
+
       await service.execute(MockCreateProfileDto);
-      
+
       expect(httpService.get).toHaveBeenCalledWith(
-        `https://viacep.com.br/ws/${MockCreateProfileDto.zipCode}/json/`
+        `https://viacep.com.br/ws/${MockCreateProfileDto.zipCode}/json/`,
       );
     });
 
     it('should throw when ViaCEP returns error', async () => {
       httpService.get.mockReturnValue(
-        of({ data: { ...MockViaCepResponse, erro: true } })
+        of({ data: { ...MockViaCepResponse, erro: true } }),
       );
 
-      await expect(service.execute(MockCreateProfileDto)).rejects.toMatchObject({
-        internalCode: 'create-profile.getAddress',
-        code: 400,
-      });
+      await expect(service.execute(MockCreateProfileDto)).rejects.toMatchObject(
+        {
+          internalCode: 'create-profile.getAddress',
+          code: 400,
+        },
+      );
     });
 
     it('should throw on network error', async () => {
       httpService.get.mockReturnValue(
-        throwError(() => new Error('Network error'))
+        throwError(() => new Error('Network error')),
       );
 
-      await expect(service.execute(MockCreateProfileDto)).rejects.toMatchObject({
-        internalCode: 'create-profile.getAddress',
-        code: 400,
-      });
+      await expect(service.execute(MockCreateProfileDto)).rejects.toMatchObject(
+        {
+          internalCode: 'create-profile.getAddress',
+          code: 400,
+        },
+      );
     });
   });
 
@@ -158,10 +168,12 @@ describe('CreateProfileService', () => {
             localidade: 'São Paulo',
             uf: MockCreateProfileDtoWithDifferentCity.state,
           }),
-        })
+        }),
       );
 
-      await expect(service.execute(MockCreateProfileDtoWithDifferentCity)).rejects.toMatchObject({
+      await expect(
+        service.execute(MockCreateProfileDtoWithDifferentCity),
+      ).rejects.toMatchObject({
         internalCode: 'create-profile.addressMismatch',
         code: 400,
       });
@@ -174,10 +186,12 @@ describe('CreateProfileService', () => {
             localidade: MockCreateProfileDtoWithDifferentState.city,
             uf: 'SP',
           }),
-        })
+        }),
       );
 
-      await expect(service.execute(MockCreateProfileDtoWithDifferentState)).rejects.toMatchObject({
+      await expect(
+        service.execute(MockCreateProfileDtoWithDifferentState),
+      ).rejects.toMatchObject({
         internalCode: 'create-profile.addressMismatch',
         code: 400,
       });
@@ -190,12 +204,14 @@ describe('CreateProfileService', () => {
             localidade: 'Sao Paulo',
             uf: MockCreateProfileDtoWithAccentedCity.state,
           }),
-        })
+        }),
       );
       profileRepository.createProfile.mockResolvedValue(MockProfileWithAddress);
 
-      const result = await service.execute(MockCreateProfileDtoWithAccentedCity);
-      
+      const result = await service.execute(
+        MockCreateProfileDtoWithAccentedCity,
+      );
+
       expect(result).toBeDefined();
       expect(result.address.city).toBe('São Paulo');
     });
@@ -203,22 +219,30 @@ describe('CreateProfileService', () => {
 
   describe('Repository Integration', () => {
     it('should propagate AppError from repository', async () => {
-      const repoError = new AppError('profile-repository.createProfile', 409, 'Email exists');
-      
+      const repoError = new AppError(
+        'profile-repository.createProfile',
+        409,
+        'Email exists',
+      );
+
       httpService.get.mockReturnValue(of({ data: MockViaCepResponse }));
       profileRepository.createProfile.mockRejectedValue(repoError);
 
-      await expect(service.execute(MockCreateProfileDto)).rejects.toBe(repoError);
+      await expect(service.execute(MockCreateProfileDto)).rejects.toBe(
+        repoError,
+      );
     });
 
     it('should wrap unexpected repository errors', async () => {
       httpService.get.mockReturnValue(of({ data: MockViaCepResponse }));
       profileRepository.createProfile.mockRejectedValue(new Error('DB error'));
 
-      await expect(service.execute(MockCreateProfileDto)).rejects.toMatchObject({
-        internalCode: 'profile-service.createProfile',
-        code: 500,
-      });
+      await expect(service.execute(MockCreateProfileDto)).rejects.toMatchObject(
+        {
+          internalCode: 'profile-service.createProfile',
+          code: 500,
+        },
+      );
     });
   });
 });

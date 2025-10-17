@@ -33,7 +33,8 @@ export class CreateProfileDto {
   @IsNotEmpty({ message: 'Cellphone is required' })
   @Transform(stripNonNumeric)
   @Matches(/^\d{2}9\d{8}$/, {
-    message: 'Cellphone must be a valid Brazilian cellphone (11 digits: DD9XXXXXXXX)',
+    message:
+      'Cellphone must be a valid Brazilian cellphone (11 digits: DD9XXXXXXXX)',
   })
   cellphone: string;
 

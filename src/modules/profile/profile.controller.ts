@@ -8,11 +8,14 @@ import { IProfileResponse } from './interfaces/profile.interface';
 @Controller('profile')
 export class ProfileController {
   constructor(
-    @Inject(CreateProfileService) private readonly createProfile: CreateProfileService,
+    @Inject(CreateProfileService)
+    private readonly createProfile: CreateProfileService,
   ) {}
 
   @Post('/create')
-  async create(@Body() createProfileDto: CreateProfileDto): Promise<IProfileResponse> {
+  async create(
+    @Body() createProfileDto: CreateProfileDto,
+  ): Promise<IProfileResponse> {
     const profile = await this.createProfile.execute(createProfileDto);
     return profile;
   }

@@ -1,6 +1,8 @@
 import {
   Controller,
   Get,
+  HttpCode,
+  HttpStatus,
   Post,
   Request,
   UseFilters,
@@ -20,6 +22,7 @@ export class AuthController {
 
   @isPublic()
   @Post('/login')
+  @HttpCode(HttpStatus.OK)
   @UseGuards(LocalAuthGuard)
   async login(@Request() req: IAuthRequest): Promise<IUserToken> {
     const { user } = req;

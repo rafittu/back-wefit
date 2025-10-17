@@ -6,7 +6,7 @@ import { ProfileRepository } from './repository/profile.repository';
 import { CreateProfileService } from './services/create-profile.service';
 
 @Module({
-  imports: [HttpModule.register({ timeout: 2000 })],
+  imports: [HttpModule.register({ timeout: 9000 })],
   controllers: [ProfileController],
   providers: [PrismaService, ProfileRepository, CreateProfileService],
   exports: [CreateProfileService],

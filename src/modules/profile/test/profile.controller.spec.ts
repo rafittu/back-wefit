@@ -33,12 +33,12 @@ describe('ProfileController', () => {
   });
 
   describe('POST /profile/create', () => {
-    it('should call service.execute with DTO and wrap response in { data }', async () => {
+    it('should call service.execute with DTO and return profile directly', async () => {
       const result = await controller.create(MockCreateProfileDto);
 
       expect(createProfileService.execute).toHaveBeenCalledTimes(1);
       expect(createProfileService.execute).toHaveBeenCalledWith(MockCreateProfileDto);
-      expect(result).toEqual({ data: MockIProfileResponse });
+      expect(result).toEqual(MockIProfileResponse);
     });
 
     it('should propagate service errors without modification', async () => {

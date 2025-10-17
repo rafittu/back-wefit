@@ -1,5 +1,45 @@
+# Dependencies
 node_modules/
-.github/
+npm-debug.log
+yarn-error.log
+
+# Build & Testing
 dist/
-tmp/
+build/
+coverage/
+*.spec.ts
+test/
+
+# Environment
 .env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Git & CI/CD
+.git/
+.gitignore
+.github/
+
+# Docker
+Dockerfile
+.dockerignore
+docker-compose*.yml
+
+# Database
+data/
+prisma/migrations/
+
+# Misc
+tmp/
+*.md
+!README.md
+.DS_Store
+.prettierrc
+.eslintrc.js

@@ -12,8 +12,8 @@ export class ProfileController {
   ) {}
 
   @Post('/create')
-  async create(@Body() createProfileDto: CreateProfileDto): Promise<{ data: IProfileResponse }> {
+  async create(@Body() createProfileDto: CreateProfileDto): Promise<IProfileResponse> {
     const profile = await this.createProfile.execute(createProfileDto);
-    return { data: profile };
+    return profile;
   }
 }

@@ -45,10 +45,12 @@ export class ProfileRepository implements IProfileRepository {
 
         } catch (err: any) {
             if (err?.code === 'P2002') {
+                const target = err.meta?.target;
+                const targetStr = Array.isArray(target) ? target.join(', ') : String(target ?? 'field');
                 throw new AppError(
-                'profile-repository.createProfile',
-                409,
-                `${err.meta?.target?.[0]} already taken`,
+                    'profile-repository.createProfile',
+                    409,
+                    `${targetStr} already taken`,
                 );
             }
 

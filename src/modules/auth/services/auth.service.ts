@@ -4,7 +4,7 @@ import { AppError } from '../../../common/errors/Error';
 import { IJtwPayload, IUserPayload, IUserToken } from '../interfaces/auth.interface';
 import * as bcrypt from 'bcrypt';
 import { findUserByEmail } from '../mocks/auth.mock';
-import { PrismaService } from 'src/prisma.service';
+import { PrismaService } from '../../../prisma.service';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()

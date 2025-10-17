@@ -8,13 +8,13 @@ import { IProfileRepository } from '../interfaces/repository.interface';
 import { ViaCepResponse, IProfileResponse, ProfileWithAddress } from '../interfaces/profile.interface';
 import { mapProfileToResponse } from '../interfaces/mappers';
 import { CreateProfileDto } from '../dto/create-profile.dto';
-import { isValidCNPJ, isValidCPF } from 'src/modules/utils/validators';
+import { isValidCNPJ, isValidCPF } from '../../utils/validators';
 
 @Injectable()
 export class CreateProfileService {
   constructor(
-  @Inject(ProfileRepository)
-  private readonly profileRepository: IProfileRepository,
+    @Inject(ProfileRepository)
+    private readonly profileRepository: IProfileRepository,
     private readonly httpService: HttpService,
   ) {}
 

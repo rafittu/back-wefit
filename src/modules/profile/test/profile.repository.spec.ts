@@ -79,7 +79,9 @@ describe('ProfileRepository', () => {
         const mockResult = MockProfileWithCNPJ;
         prismaService.profile.create.mockResolvedValue(mockResult);
 
-        const result = await repository.createProfile(MockICreateProfileWithCNPJ);
+        const result = await repository.createProfile(
+          MockICreateProfileWithCNPJ,
+        );
 
         expect(prismaService.profile.create).toHaveBeenCalledWith(
           expect.objectContaining({
@@ -87,7 +89,7 @@ describe('ProfileRepository', () => {
               cnpj: '11222333000181',
               cpf: null,
             }),
-          })
+          }),
         );
         expect(result).toEqual(mockResult);
       });
@@ -108,7 +110,7 @@ describe('ProfileRepository', () => {
                 }),
               }),
             }),
-          })
+          }),
         );
       });
 
@@ -128,7 +130,7 @@ describe('ProfileRepository', () => {
                 }),
               }),
             }),
-          })
+          }),
         );
       });
     });
@@ -141,7 +143,9 @@ describe('ProfileRepository', () => {
         };
         prismaService.profile.create.mockRejectedValue(prismaError);
 
-        await expect(repository.createProfile(MockICreateProfile)).rejects.toMatchObject({
+        await expect(
+          repository.createProfile(MockICreateProfile),
+        ).rejects.toMatchObject({
           internalCode: 'profile-repository.createProfile',
           code: 409,
           message: 'email already taken',
@@ -155,7 +159,9 @@ describe('ProfileRepository', () => {
         };
         prismaService.profile.create.mockRejectedValue(prismaError);
 
-        await expect(repository.createProfile(MockICreateProfile)).rejects.toMatchObject({
+        await expect(
+          repository.createProfile(MockICreateProfile),
+        ).rejects.toMatchObject({
           internalCode: 'profile-repository.createProfile',
           code: 409,
           message: 'cpf already taken',
@@ -169,7 +175,9 @@ describe('ProfileRepository', () => {
         };
         prismaService.profile.create.mockRejectedValue(prismaError);
 
-        await expect(repository.createProfile(MockICreateProfile)).rejects.toMatchObject({
+        await expect(
+          repository.createProfile(MockICreateProfile),
+        ).rejects.toMatchObject({
           internalCode: 'profile-repository.createProfile',
           code: 409,
           message: 'cnpj already taken',
@@ -183,7 +191,9 @@ describe('ProfileRepository', () => {
         };
         prismaService.profile.create.mockRejectedValue(prismaError);
 
-        await expect(repository.createProfile(MockICreateProfile)).rejects.toMatchObject({
+        await expect(
+          repository.createProfile(MockICreateProfile),
+        ).rejects.toMatchObject({
           internalCode: 'profile-repository.createProfile',
           code: 409,
           message: 'cellphone already taken',
@@ -197,7 +207,9 @@ describe('ProfileRepository', () => {
         };
         prismaService.profile.create.mockRejectedValue(prismaError);
 
-        await expect(repository.createProfile(MockICreateProfile)).rejects.toMatchObject({
+        await expect(
+          repository.createProfile(MockICreateProfile),
+        ).rejects.toMatchObject({
           internalCode: 'profile-repository.createProfile',
           code: 409,
           message: 'email, cpf already taken',
@@ -211,7 +223,9 @@ describe('ProfileRepository', () => {
         };
         prismaService.profile.create.mockRejectedValue(prismaError);
 
-        await expect(repository.createProfile(MockICreateProfile)).rejects.toMatchObject({
+        await expect(
+          repository.createProfile(MockICreateProfile),
+        ).rejects.toMatchObject({
           internalCode: 'profile-repository.createProfile',
           code: 409,
           message: 'field already taken',
@@ -224,7 +238,9 @@ describe('ProfileRepository', () => {
         const prismaError = new Error('Connection timeout');
         prismaService.profile.create.mockRejectedValue(prismaError);
 
-        await expect(repository.createProfile(MockICreateProfile)).rejects.toMatchObject({
+        await expect(
+          repository.createProfile(MockICreateProfile),
+        ).rejects.toMatchObject({
           internalCode: 'profile-repository.createProfile',
           code: 500,
           message: 'profile not created: Connection timeout',
@@ -235,7 +251,9 @@ describe('ProfileRepository', () => {
         const prismaError = { code: 'P1001' };
         prismaService.profile.create.mockRejectedValue(prismaError);
 
-        await expect(repository.createProfile(MockICreateProfile)).rejects.toMatchObject({
+        await expect(
+          repository.createProfile(MockICreateProfile),
+        ).rejects.toMatchObject({
           internalCode: 'profile-repository.createProfile',
           code: 500,
         });
@@ -244,7 +262,9 @@ describe('ProfileRepository', () => {
       it('should handle non-Error exceptions', async () => {
         prismaService.profile.create.mockRejectedValue('String error');
 
-        await expect(repository.createProfile(MockICreateProfile)).rejects.toMatchObject({
+        await expect(
+          repository.createProfile(MockICreateProfile),
+        ).rejects.toMatchObject({
           internalCode: 'profile-repository.createProfile',
           code: 500,
           message: 'profile not created: String error',
@@ -254,7 +274,9 @@ describe('ProfileRepository', () => {
       it('should handle null/undefined exceptions', async () => {
         prismaService.profile.create.mockRejectedValue(null);
 
-        await expect(repository.createProfile(MockICreateProfile)).rejects.toMatchObject({
+        await expect(
+          repository.createProfile(MockICreateProfile),
+        ).rejects.toMatchObject({
           internalCode: 'profile-repository.createProfile',
           code: 500,
         });
@@ -269,7 +291,7 @@ describe('ProfileRepository', () => {
         await repository.createProfile(MockICreateProfile);
 
         const callArgs = prismaService.profile.create.mock.calls[0][0];
-        
+
         expect(callArgs.data).not.toHaveProperty('zipCode');
         expect(callArgs.data.address.create).toHaveProperty('zipcode');
         expect(callArgs.include).toEqual({ address: true });
@@ -289,4 +311,3 @@ describe('ProfileRepository', () => {
     });
   });
 });
-

@@ -47,7 +47,10 @@ export const isValidCNPJ = (cnpj: string): boolean => {
 
   const base = cnpj.substring(0, 12);
   const firstCheckDigit = calcCheckDigit(base, firstMultipliers);
-  const secondCheckDigit = calcCheckDigit(base + firstCheckDigit, secondMultipliers);
+  const secondCheckDigit = calcCheckDigit(
+    base + firstCheckDigit,
+    secondMultipliers,
+  );
 
   return (
     firstCheckDigit === parseInt(cnpj[12]) &&

@@ -5,7 +5,11 @@ import { lastValueFrom } from 'rxjs';
 import { AppError } from '../../../common/errors/Error';
 import { ProfileRepository } from '../repository/profile.repository';
 import { IProfileRepository } from '../interfaces/repository.interface';
-import { ViaCepResponse, IProfileResponse, ProfileWithAddress } from '../interfaces/profile.interface';
+import {
+  ViaCepResponse,
+  IProfileResponse,
+  ProfileWithAddress,
+} from '../interfaces/profile.interface';
 import { mapProfileToResponse } from '../interfaces/mappers';
 import { CreateProfileDto } from '../dto/create-profile.dto';
 import { isValidCNPJ, isValidCPF } from '../../utils/validators';
@@ -20,21 +24,31 @@ export class CreateProfileService {
 
   private validateDocument(data: CreateProfileDto) {
     if (!data.cnpj && !data.cpf)
-      throw new AppError('profile-service.createProfile', 400, 'missing CPF or CNPJ');
+      throw new AppError(
+        'profile-service.createProfile',
+        400,
+        'missing CPF or CNPJ',
+      );
 
     if (data.cpf && !isValidCPF(data.cpf))
-      throw new AppError('profile-service.createProfile', 400, 'provided CPF is invalid.');
+      throw new AppError(
+        'profile-service.createProfile',
+        400,
+        'provided CPF is invalid.',
+      );
 
     if (data.cnpj && !isValidCNPJ(data.cnpj))
-      throw new AppError('profile-service.createProfile', 400, 'provided CNPJ is invalid.');
+      throw new AppError(
+        'profile-service.createProfile',
+        400,
+        'provided CNPJ is invalid.',
+      );
   }
 
   private async getAddress(zipCode: string) {
     try {
       const response: AxiosResponse<ViaCepResponse> = await lastValueFrom(
-        this.httpService.get(
-          `https://viacep.com.br/ws/${zipCode}/json/`
-        )
+        this.httpService.get(`https://viacep.com.br/ws/${zipCode}/json/`),
       );
 
       if (response.data.erro) {
@@ -46,7 +60,7 @@ export class CreateProfileService {
       throw new AppError(
         'create-profile.getAddress',
         400,
-        `error fetching address from ViaCEP: ${error.message || String(error)}`
+        `error fetching address from ViaCEP: ${error.message || String(error)}`,
       );
     }
   }
@@ -82,14 +96,13 @@ export class CreateProfileService {
     }
   }
 
-  async execute(
-    data: CreateProfileDto,
-  ): Promise<IProfileResponse> {
+  async execute(data: CreateProfileDto): Promise<IProfileResponse> {
     try {
-      this.validateDocument(data)
+      this.validateDocument(data);
 
-      const { logradouro, bairro, localidade, uf } =
-        await this.getAddress(data.zipCode);
+      const { logradouro, bairro, localidade, uf } = await this.getAddress(
+        data.zipCode,
+      );
 
       this.validateAddressMatch(data.city, data.state, localidade, uf);
 
@@ -111,10 +124,10 @@ export class CreateProfileService {
         state,
       };
 
-      const createdProfile = await this.profileRepository.createProfile(profileToSave);
+      const createdProfile =
+        await this.profileRepository.createProfile(profileToSave);
 
       return mapProfileToResponse(createdProfile as ProfileWithAddress);
-
     } catch (error) {
       if (error instanceof AppError) {
         throw error;

@@ -1,5 +1,8 @@
 # 🚀 Backend - Desafio Técnico WeFit
 
+[![CI Pipeline](https://github.com/rafittu/back-wefit/actions/workflows/ci.yml/badge.svg?branch=develop)](https://github.com/rafittu/back-wefit/actions/workflows/ci.yml)
+[![Docker Build](https://github.com/rafittu/back-wefit/actions/workflows/docker.yml/badge.svg?branch=develop)](https://github.com/rafittu/back-wefit/actions/workflows/docker.yml)
+
 ###
 
 <br>

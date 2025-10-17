@@ -1,0 +1,44 @@
+name: CI Pipeline
+
+# When this workflow runs
+on:
+  # Run on pull requests to develop or main
+  pull_request:
+    branches: [develop, main]
+  # Run on direct pushes to develop or main
+  push:
+    branches: [develop, main]
+
+jobs:
+  # Job 1: Run linter and tests
+  test:
+    name: Tests & Linting
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout code from repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Setup Node.js environment
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      # Step 3: Install dependencies
+      - name: Install dependencies
+        run: npm ci
+
+      # Step 4: Generate Prisma Client
+      - name: Generate Prisma Client
+        run: npx prisma generate
+
+      # Step 5: Run ESLint with legacy config
+      - name: Run Linter
+        run: ESLINT_USE_FLAT_CONFIG=false npm run lint
+
+      # Step 6: Run unit tests
+      - name: Run Unit Tests
+        run: npm run test

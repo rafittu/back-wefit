@@ -1,5 +1,8 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
-import { IAuthRequest, IUserPayload } from '../../modules/auth/interfaces/auth.interface';
+import {
+  IAuthRequest,
+  IUserPayload,
+} from '../../modules/auth/interfaces/auth.interface';
 
 export const CurrentUser = createParamDecorator(
   (_data: unknown, context: ExecutionContext): IUserPayload => {

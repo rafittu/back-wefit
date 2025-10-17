@@ -11,7 +11,11 @@ import {
 import { HttpExceptionFilter } from '../../common/filter/http-exception.filter';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { AuthService } from './services/auth.service';
-import { IAuthRequest, IUserPayload, IUserToken } from './interfaces/auth.interface';
+import {
+  IAuthRequest,
+  IUserPayload,
+  IUserToken,
+} from './interfaces/auth.interface';
 import { isPublic } from '../../common/decorators/is-public.decorator';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 

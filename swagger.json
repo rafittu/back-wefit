@@ -131,6 +131,71 @@
                     }
                 }
             }
+        },
+        "/me": {
+            "get": {
+                "tags": ["Authentication"],
+                "summary": "Get current user info",
+                "description": "Returns the authenticated user's information extracted from the JWT token.",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success - Returns current user information",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserPayload"
+                                },
+                                "example": {
+                                    "id": "1",
+                                    "name": "User One",
+                                    "email": "user1@example.com"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Missing or invalid JWT token",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "missingToken": {
+                                        "summary": "Missing authorization header",
+                                        "value": {
+                                            "internalCode": "jwt.error",
+                                            "code": 401,
+                                            "message": "Unauthorized"
+                                        }
+                                    },
+                                    "invalidToken": {
+                                        "summary": "Invalid or expired token",
+                                        "value": {
+                                            "internalCode": "jwt.error",
+                                            "code": 401,
+                                            "message": "Invalid token"
+                                        }
+                                    },
+                                    "expiredToken": {
+                                        "summary": "Expired token",
+                                        "value": {
+                                            "internalCode": "jwt.error",
+                                            "code": 401,
+                                            "message": "Token expired"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
 
@@ -161,6 +226,27 @@
                         "type": "string",
                         "description": "JWT access token for authentication",
                         "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                    }
+                }
+            },
+            "UserPayload": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "User unique identifier",
+                        "example": "1"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "User full name",
+                        "example": "User One"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "description": "User email address",
+                        "example": "user1@example.com"
                     }
                 }
             },

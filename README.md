@@ -146,6 +146,29 @@ A API estará disponível em `http://localhost:3008` (ou porta configurada no `.
 
 <br>
 
+### 🐳 Alternativa: Executar com Docker (Opcional)
+
+Para rodar a aplicação **e** o banco de dados juntos em containers:
+
+```bash
+# Iniciar containers (app + MySQL)
+$ docker compose -f docker-compose.dev.yml up --build
+
+# Rodar em background
+$ docker compose -f docker-compose.dev.yml up -d --build
+
+# Parar containers
+$ docker compose -f docker-compose.dev.yml down
+```
+
+**Observações:**
+- ✅ Prisma Client é gerado automaticamente
+- ✅ Migrations são aplicadas no startup
+- ✅ Hot-reload funciona (volumes montados)
+- ✅ MySQL usa variáveis do `.env`
+
+<br>
+
 ## 📡 Endpoints Principais
 
 ### Autenticação (Pública):

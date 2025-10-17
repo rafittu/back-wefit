@@ -4,18 +4,8 @@ name: Docker Build
 on:
   pull_request:
     branches: [develop, main]
-    paths:
-      - 'Dockerfile'
-      - 'docker-compose.dev.yml'
-      - '.dockerignore'
-      - 'prisma/**'
   push:
     branches: [develop, main]
-    paths:
-      - 'Dockerfile'
-      - 'docker-compose.dev.yml'
-      - '.dockerignore'
-      - 'prisma/**'
 
 jobs:
   # Job 1: Build Docker image

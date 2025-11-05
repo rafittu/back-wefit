@@ -1,9 +1,10 @@
-import { Module } from '@nestjs/common';
+import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import * as Joi from 'joi';
 import { HttpExceptionFilter } from './common/filter/http-exception.filter';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor';
+import { LoggerMiddleware } from './common/middleware/logger.middleware';
 import { ProfileModule } from './modules/profile/profile.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard';
@@ -41,4 +42,8 @@ import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard';
     },
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
+}

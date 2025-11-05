@@ -53,6 +53,12 @@ Este projeto utiliza as seguintes tecnologias:
 - Mensagens de erro descritivas e códigos HTTP apropriados;
 - Sistema centralizado de erros com `AppError`;
 
+### Pipeline automatizado de CI/CD com GitHub Actions:
+- **Testes Automatizados:** Todos os testes unitários são executados em cada PR
+- **Validação de Lint:** Code style é verificado automaticamente
+- **Docker Build:** Validação de containerização em cada mudança
+- **Branch Protection:** Merge bloqueado se testes falharem
+
 <br>
 
 ## 📋 Observação sobre Implementação
@@ -121,10 +127,10 @@ JWT_EXPIRATION_TIME='27d'
 4. **Inicie o banco de dados:**
 
 ```bash
-$ docker-compose up -d
+$ docker compose up -d
 ```
 
-O Docker Compose criará um container MySQL acessível em `localhost:3306` com usuário `root` e senha `senha_root_123`.
+O Docker Compose criará um container MySQL acessível em `localhost:3306` com usuário `user` e senha `password`.
 
 5. **Execute as migrations do Prisma:**
 
